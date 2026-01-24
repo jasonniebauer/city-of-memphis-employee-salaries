@@ -34,6 +34,13 @@ def load_salary_data() -> pd.DataFrame:
     
     # Categorize city divisions/departments
     df['Division Category'] = df.apply(get_city_division_category, axis=1)
+
+    # Rename Category column to Employment Type
+    df = df.rename(columns={'Category': 'Employment Type'})
+    # Replace 'Regular' with 'Full-time' in the Employment Type column
+    df['Employment Type'] = df['Employment Type'].replace('Regular', 'Full-time')
+    # Replace 'Part-Time' with 'Part-time' in the Employment Type column
+    df['Employment Type'] = df['Employment Type'].replace('Part-Time', 'Part-time')
     
     return df
 
