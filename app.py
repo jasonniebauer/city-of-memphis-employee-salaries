@@ -24,7 +24,7 @@ st.markdown(
     """
     <style>
     /* Hide GitHub Fork button on public site */
-    [data-testid="stBaseButton-header"] {
+    [data-testid="stToolbarActionButton"]:nth-of-type(1) {
         display: none !important;
     }
 
