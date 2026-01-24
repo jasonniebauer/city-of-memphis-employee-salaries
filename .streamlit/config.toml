@@ -5,6 +5,7 @@
 #
 # Default: true
 showSidebarNavigation = false
+toolbarMode = "minimal"
 
 [theme]
 primaryColor="#0052FF"          # Color for interactive elements and highlights (old: 306bea)
