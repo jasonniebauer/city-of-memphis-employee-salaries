@@ -67,7 +67,7 @@ def render_navigation():
         # st.markdown("---")
         st.subheader("City Insights")
         # Navigation links
-        st.page_link("app.py", label="Overview", icon=":material/tour:")
+        st.page_link("streamlit_app.py", label="Overview", icon=":material/tour:")
         st.page_link("pages/public-safety.py", label="Public Safety", icon=":material/local_police:")
         st.page_link("pages/public-works.py", label="Public Works", icon=":material/tram:")  # traffic
         st.page_link("pages/stronger-neighborhoods.py", label="Stronger Neighborhoods", icon=":material/psychiatry:")  # other_houses

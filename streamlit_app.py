@@ -109,6 +109,7 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
+st.space()
 # Main content
 st.title("City of Memphis Employee Salaries")
 # st.markdown("### Overview Dashboard")
