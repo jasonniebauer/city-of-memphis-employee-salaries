@@ -3,7 +3,7 @@ import altair as alt
 import pandas as pd
 from shared.navigation import render_navigation
 from shared.data_loader import initialize_data, get_department_summary
-from shared.colors import RED, BLUE, GREEN, YELLOW
+from shared.colors import RED, BLUE, GREEN, YELLOW, LIGHT_GREY, GREY, BLACK
 from config import PAGE_CONFIG
 
 
@@ -22,57 +22,72 @@ df = initialize_data()
 # Page-specific CSS (only runs here n page)
 st.markdown("""
 <style>
-    /* Set background color for active page link */
-    [data-testid="stPageLink-NavLink"][href=""] {
-        background-color: #DAE2E5 !important;
-    }
+/* Remove padding from top of page */
+#root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
 
-    /* Set background color for active page link */
-    [data-testid="stPageLink-NavLink"][href=""],
-    [data-testid="stPageLink-NavLink"][href=""]:hover {
-        background: transparent;
-        border-left: 5px solid #9AA0A6;
-        padding-left: 0.2rem;
-    }
-    
-    .xl-metric {
-        font-weight: 600;
-        line-height: 1.0;
-        font-size: 2.75rem !important;
-        margin-bottom: 0;
-        text-align: center; 
-    }
-    
-    .center {
-        text-align: center;        
-    }
-    .left {
-        text-align: left;        
-    }
-            
-    .bold {
-        font-weight: 600;        
-    }
-    
-    .pt-0 {
-        padding-top: 0 !important;        
-    }
-            
-    .red {
-        color: #EA4335;        
-    }
-    .blue {
-        color: #4285F4;        
-    }
-    .green {
-        color: #34A853;        
-    }
-    .yellow {
-        color: #FBBC04;        
-    }
-    .grey {
-        color: #9AA0A6;
-    }
+/* Remove white background from header section */
+header { background: transparent !important; }
+
+/* Set background color for active page link */
+[data-testid="stPageLink-NavLink"][href=""] {
+    background-color: #DAE2E5 !important;
+}
+
+/* Set background color for active page link */
+[data-testid="stPageLink-NavLink"][href=""],
+[data-testid="stPageLink-NavLink"][href=""]:hover {
+    background: transparent;
+    border-left: 5px solid #9AA0A6;
+    padding-left: 0.2rem;
+}
+
+.xl-metric {
+    font-weight: 600;
+    line-height: 1.0;
+    font-size: 2.75rem !important;
+    margin-bottom: 0;
+    text-align: center; 
+}
+
+[data-testid="stCaptionContainer"] .small-label {
+    font-size: smaller !important;
+    margin-top: 0;
+    line-height: 1.0;
+}
+
+.center {
+    text-align: center;        
+}
+.left {
+    text-align: left;        
+}
+        
+.bold {
+    font-weight: 600;        
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;        
+}
+.pt-0 {
+    padding-top: 0 !important;        
+}
+        
+.red {
+    color: #EA4335;        
+}
+.blue {
+    color: #4285F4;        
+}
+.green {
+    color: #34A853;        
+}
+.yellow {
+    color: #FBBC04;        
+}
+.grey {
+    color: #9AA0A6;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -124,8 +139,10 @@ percent_part_time_employees = total_part_time_employees / total_city_employees
 division_salary_totals = pd.DataFrame(df.groupby('Division Category')['Annual Salary'].sum()).reset_index()
 
 st.space()
+st.divider()
+st.space()
 
-with st.container(border=True):
+with st.container():
     
     metric1, metric2 = st.columns(2, gap="xlarge")
 
@@ -145,8 +162,6 @@ with st.container(border=True):
         st.markdown(f'<p class="xl-metric left">${total_city_salaries_formatted:,.1f}M<span style="font-size:18px;vertical-align:top;margin-left:0.2rem;">*</span></p>', unsafe_allow_html=True)
         st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>* Does not include part-time, hourly payroll</small>", unsafe_allow_html=True)    
 
-    st.space()
-
     with metric2:
         st.space()
         # Sort Divisions by the sum of all Salaries in descending order
@@ -160,10 +175,10 @@ with st.container(border=True):
 
         # Define colors
         color_map = {
-            "Public Safety": "#EA4335",
-            "Public Works": "#4285F4",
-            "Stronger Neighborhoods": "#34A853",
-            "Good Government": "#FBBC04",
+            "Public Safety": RED,
+            "Public Works": BLUE,
+            "Stronger Neighborhoods": GREEN,
+            "Good Government": YELLOW,
         }
         
         salary_distribution_by_division_category = alt.Chart(division_salary_totals).mark_arc().encode(
@@ -184,6 +199,8 @@ with st.container(border=True):
         # )
 
         st.altair_chart(salary_distribution_by_division_category, width="stretch")
+    
+    st.space()
 
     quad1, quad2, quad3, quad4 = st.columns(4)
 
@@ -225,7 +242,6 @@ with st.container(border=True):
 
     st.space()
     st.space()
-    # st.divider()
 
     with st.container():
         # Calculating the sum of all Salaries in each Division
@@ -278,7 +294,7 @@ with st.container(border=True):
 
         # color="#202124"
         chart = alt.Chart(division_salary_totals).mark_bar().encode(
-            x=alt.X('Annual Salary', axis=alt.Axis(title='Annual Salary Total', format='$0,f')),
+            x=alt.X('Annual Salary', axis=alt.Axis(title='Annual Salary Total', format='$,s')),
             y=alt.Y(
                 'Division Name',
                 sort='-x',
@@ -295,17 +311,21 @@ with st.container(border=True):
 
 #--------------------------------------------------------
 st.space()
+st.divider()
+st.space()
 
-with st.container(border=True):
+with st.container():
     st.markdown('<h2 class="pt-0">Employee Overview Dashboard</h2>', unsafe_allow_html=True)
 
     overview_col_1, overview_col_2 = st.columns(2)
 
     with overview_col_1:
-        st.markdown("""Text goes here""")
+        st.markdown(
+            f"""The City of Memphis consists of {total_city_job_titles} unique job roles for its employees."""
+        )
         st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0.25rem;line-height:1.0;'>Total Employees</p>", unsafe_allow_html=True)
         st.markdown(f'<p class="xl-metric left">{total_city_employees:,}</p>', unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>Regular and part-time</small>", unsafe_allow_html=True)
+        st.caption("<small>Regular and part-time</small>", unsafe_allow_html=True)
 
     with overview_col_2:
         source = pd.DataFrame({
@@ -334,41 +354,29 @@ with st.container(border=True):
         )
 
         st.altair_chart(pie_chart_job_category, width="stretch")
+    
+    st.space()
 
-    high_level_summary4, high_level_summary5, high_level_summary6 = st.columns(3)
+    high_level_summary1, high_level_summary2, high_level_summary3, high_level_summary4 = st.columns(4)
 
-    with high_level_summary4:
+    with high_level_summary1:
         st.markdown(f'<p class="xl-metric">{total_salaried_employees:,}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Total Salaried Employees</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
+        st.markdown('<p class="center bold mb-0">Salary Employees</p>', unsafe_allow_html=True)
+        # st.caption('<p class="small-label center">All City Divisions</p>', unsafe_allow_html=True)
 
-    with high_level_summary5:
+    with high_level_summary2:
         st.markdown(f'<p class="xl-metric">${average_city_salary:,.2f}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Average Salary</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
+        st.markdown('<p class="center bold mb-0">Average Salary</p>', unsafe_allow_html=True)
 
-    with high_level_summary6:
-        st.markdown(f'<p class="xl-metric">{total_salaried_job_titles}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Salaried Job Titles</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
-
-    high_level_summary7, high_level_summary8, high_level_summary9 = st.columns(3)
-
-    with high_level_summary7:
-        st.markdown(f'<p class="xl-metric">${average_city_hourly_pay:.2f}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Average Part-Time Hourly Rate</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
-
-    with high_level_summary8:
+    with high_level_summary3:
         st.markdown(f'<p class="xl-metric">{total_part_time_employees:,}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Total Part-Time Employees</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
+        st.markdown('<p class="center bold mb-0">Part-Time Employees</p>', unsafe_allow_html=True)
+    
+    with high_level_summary4:
+        st.markdown(f'<p class="xl-metric">${average_city_hourly_pay:.2f}</p>', unsafe_allow_html=True)
+        st.markdown('<p class="center bold mb-0">Average Hourly Rate</p>', unsafe_allow_html=True)    
 
-    with high_level_summary9:
-        st.markdown(f'<p class="xl-metric">{total_hourly_job_titles}</p>', unsafe_allow_html=True)
-        st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0rem;line-height:1.0;'>Part-Time Job Titles</p>", unsafe_allow_html=True)
-        st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>All City Divisions</small>", unsafe_allow_html=True)
-
+    st.space()
     st.space()
 
     # Rename specific columns
@@ -397,7 +405,7 @@ with st.container(border=True):
             title='Classification',
             scale=alt.Scale(
                 domain=['Regular', 'Part-Time'],
-                range=['#E37400', '#FBBC04']
+                range=[BLACK, GREY]
                 
             )),
         # order=alt.Order('Category:N', sort='descending'),
@@ -407,48 +415,46 @@ with st.container(border=True):
             alt.Tooltip('sum(Count):Q', title='Count', format=',d')
         ]
     ).properties(
-        title='Salaried and Part-Time Employees',
+        title='Salary vs Part-Time Employees',
     )
 
     st.altair_chart(chart, width="stretch")
 
-#--------------------------------------------------------
+# st.header("City Divisions", anchor="city-divisions")
+# st.write(
+#     """There are a total of 17 divisions for the city of Memphis. Each division is responsible for specific services, operations, or administrative functions. These divisions group employees who perform related work, report under shared leadership, and focus on delivering particular public services or support."""
+# )
+# st.write(
+#     """Employee salaries, job titles, and payroll data are typically categorized and reported by these divisions (as seen in the city's public salary lists and pay plans). This structure helps ensure clear accountability, efficient resource allocation, and alignment with the city's mission to provide essential services to residents."""
+# )
+# st.write(
+#     """City divisions can be grouped together into 6 categories by aligning core responsibilities and typical functions in city operations."""
+# )
 
-st.header("City Divisions", anchor="city-divisions")
-st.write(
-    """There are a total of 17 divisions for the city of Memphis. Each division is responsible for specific services, operations, or administrative functions. These divisions group employees who perform related work, report under shared leadership, and focus on delivering particular public services or support."""
-)
-st.write(
-    """Employee salaries, job titles, and payroll data are typically categorized and reported by these divisions (as seen in the city's public salary lists and pay plans). This structure helps ensure clear accountability, efficient resource allocation, and alignment with the city's mission to provide essential services to residents."""
-)
-st.write(
-    """City divisions can be grouped together into 6 categories by aligning core responsibilities and typical functions in city operations."""
-)
+# df_city_division_categories = pd.DataFrame([
+#     {
+#         "Category": "Public Safety",
+#         'Divisions Included': "Police Services, Fire Services",
+#     },
+#     {
+#         "Category": "Public Works",
+#         'Divisions Included': 'Public Works, Solid Waste, City Engineering, General Services',
+#     },
+#     {
+#         "Category": "Stronger Neighborhoods",
+#         'Divisions Included': 'Memphis Parks, Library Services, Housing and Community Development',
+#     },
+#     {
+#         "Category": "Good Government",
+#         'Divisions Included': 'Executive, Finance and Administration, Human Resources, Information Technology, City Attorney, City Court Clerk, Judicial, Legislative'
+#     }
+# ])
 
-df_city_division_categories = pd.DataFrame([
-    {
-        "Category": "Public Safety",
-        'Divisions Included': "Police Services, Fire Services",
-    },
-    {
-        "Category": "Public Works",
-        'Divisions Included': 'Public Works, Solid Waste, City Engineering, General Services',
-    },
-    {
-        "Category": "Stronger Neighborhoods",
-        'Divisions Included': 'Memphis Parks, Library Services, Housing and Community Development',
-    },
-    {
-        "Category": "Good Government",
-        'Divisions Included': 'Executive, Finance and Administration, Human Resources, Information Technology, City Attorney, City Court Clerk, Judicial, Legislative'
-    }
-])
-
-st.dataframe(
-    df_city_division_categories,
-    width="stretch",
-    hide_index=True
-)
+# st.dataframe(
+#     df_city_division_categories,
+#     width="stretch",
+#     hide_index=True
+# )
 
 #--------------------------------------------------------
 
@@ -462,7 +468,7 @@ st.dataframe(
 #     # Sort Divisions by the sum of all Salaries in descending order
 #     division_salary_totals.sort_values(by='Annual Salary', ascending=False, inplace=True)
 
-#     chart = alt.Chart(division_salary_totals).mark_bar(color="#FBBC04").encode(
+#     chart = alt.Chart(division_salary_totals).mark_bar(color=YELLOW).encode(
 #         x=alt.X('Annual Salary', axis=alt.Axis(title='Annual Salary Total', format='$0,f')),
 #         y=alt.Y(
 #             'Division Name',
