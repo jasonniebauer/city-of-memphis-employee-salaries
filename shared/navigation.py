@@ -80,7 +80,7 @@ def render_navigation():
         # st.sidebar.markdown("[Get in Touch](#contact)")
         
         st.markdown("---")
-        st.caption("Data updated: January 2026")
+        st.caption("Last updated: January 2026")
         st.markdown(
             '<h6>Made by <a href="https://jasonniebauer.com" style="text-decoration:underline;">Jason Niebauer</a></h6>',
             unsafe_allow_html=True,
