@@ -26,7 +26,7 @@ def get_city_division_category(row):
 @st.cache_data(ttl=3600, show_spinner="Loading salary data...")
 def load_salary_data() -> pd.DataFrame:
     """Load salary data - cached globally"""
-    df = pd.read_csv('City of Memphis Employee Salaries 2025.csv')
+    df = pd.read_csv('data/City of Memphis Employee Salaries 2025.csv')
     
     # # Optimize data types for performance
     # df['department'] = df['department'].astype('category')
