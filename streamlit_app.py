@@ -39,10 +39,18 @@ st.markdown(
         border-left: 5px solid #0097A7;
         padding-left: 0.2rem;
     }
+
+    [data-testid="stMetricDelta"] {
+        background: #80DEEA !important;
+        color: #202124 !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 #--------------------------------------------------------
+#
+total_divisions = df['Division Name'].nunique()
+
 # 
 total_city_salaries = df['Annual Salary'].sum()
 total_city_salaries_formatted = total_city_salaries / 1e6
@@ -85,7 +93,7 @@ This site provides an interactive analysis of employee salaries for the City of 
 The dataset includes 8,202 city employees and contains the following key details for each:
 - Job title
 - Division
-- Employment type (regular or part-time)
+- Employment type (full-time or part-time)
 - Annual salary or hourly rate
 
 The goal is to offer clear, transparent insights into salary distribution, departmental staffing, and compensation patterns across the city's workforce.
@@ -265,40 +273,45 @@ st.space()
 st.divider()
 st.space()
 
-st.markdown('<h2 class="pt-0">Employee Workforce Dashboard</h2>', unsafe_allow_html=True)
+st.markdown('<h2 class="pt-0">Employee Workforce Overview</h2>', unsafe_allow_html=True)
+st.markdown('### Employment Breakdown')
 
 overview_col_1, overview_col_2 = st.columns(2, gap="xlarge")
 
 with overview_col_1:
     st.markdown(
         f"""
-        The City of Memphis employs 8,202 individuals across {total_city_job_titles} unique job roles, supporting essential public services throughout the city.
+        The City of Memphis employs 8,202 individuals across {total_divisions} divisions supporting essential public services throughout the city.
         
         Salaried employees account for over 83% of the City's core full-time workforce, while part-time, hourly employees (typically in seasonal, support, or entry-level roles) make up nearly 17%.
 
-        <div class="table-row">
-            <span class="bold">Total employees</span>
-            <span>{total_city_employees:,}</span>
-        </div>
+        
         <div class="table-row">
             <span class="bold">Full-time (salaried) employees</span>
             <span>{total_salaried_employees:,}</span>
         </div>
-        <div class="table-row" style="margin-bottom:1rem;border-bottom:none;">
+        <div class="table-row"">
             <span class="bold">Part-time employees</span>
             <span>{total_part_time_employees:,}</span>
         </div>
-        <div class="table-row"">
-            <span class="bold">Average annual salary (full-time employees)</span>
-            <span>${average_city_salary:,.2f}</span>
-        </div>
-        <div class="table-row" style="margin-bottom:2rem;">
-            <span class="bold">Average hourly rate (part-time employees)</span>
-            <span>${average_city_hourly_pay:.2f}</span>
+        <div class="table-row">
+            <span class="bold">Total employees</span>
+            <span>{total_city_employees:,}</span>
         </div>
         """, unsafe_allow_html=True
     )
-    # st.caption("<small>Data as of January 28, 2025</small>", unsafe_allow_html=True)
+    # st.markdown(
+    #     f"""
+    #     <div class="table-row"">
+    #         <span class="bold">Average annual salary (full-time employees)</span>
+    #         <span>${average_city_salary:,.2f}</span>
+    #     </div>
+    #     <div class="table-row" style="margin-bottom:2rem;">
+    #         <span class="bold">Average hourly rate (part-time employees)</span>
+    #         <span>${average_city_hourly_pay:.2f}</span>
+    #     </div>
+    #     """, unsafe_allow_html=True
+    # )
 
 with overview_col_2:
     source = pd.DataFrame({
@@ -309,8 +322,8 @@ with overview_col_2:
 
     # Define colors
     employee_classification_color_map = {
-        "Full-time": "#0097A7",
-        "Part-time": "#80DEEA"
+        "Full-time": TEAL,
+        "Part-time": LIGHT_TEAL
     }
 
     pie_chart_job_category = alt.Chart(source).mark_arc().encode(
@@ -324,14 +337,244 @@ with overview_col_2:
             alt.Tooltip("Count:Q", format=",", title="Count"),
             alt.Tooltip("Value:Q", format=".1%", title="Percentage")
         ]
-    ).properties(
-        title='Employment Type Breakdown'
     )
+    # .properties(
+    #     title='Employees by Employment Type'
+    # )
 
     st.altair_chart(pie_chart_job_category, width="stretch")
 
 st.space()
+
+st.markdown('### Employees by Division Category')
+
+employment_type_division_category_cols = st.columns(2, gap="xlarge")
+
+with employment_type_division_category_cols[0]:
+    st.markdown("""Placeholder""")
+
+with employment_type_division_category_cols[1]:
+    public_safety_employee_count = len(df.loc[
+        df['Division Category'] == 'Public Safety'
+    ])
+
+    public_safety_employee_percentage = (
+        public_safety_employee_count / total_city_employees
+    )
+
+    public_works_employee_count = len(df.loc[
+        df['Division Category'] == 'Public Works'
+    ])
+
+    public_works_employee_percentage = (
+        public_works_employee_count / total_city_employees
+    )
+
+    stronger_neighborhoods_employee_count = len(df.loc[
+        df['Division Category'] == 'Stronger Neighborhoods'
+    ])
+
+    stronger_neighborhoods_employee_percentage = (
+        stronger_neighborhoods_employee_count / total_city_employees
+    )
+
+    good_government_employee_count = len(df.loc[
+        df['Division Category'] == 'Good Government'
+    ])
+
+    good_government_employee_percentage = (
+        good_government_employee_count / total_city_employees
+    )
+
+    df_division_category_employee = pd.DataFrame({
+        "Division Category": ["Public Safety", "Public Works", "Stronger Neighborhoods", "Good Government"],
+        "Value": [public_safety_employee_percentage, public_works_employee_percentage, stronger_neighborhoods_employee_percentage, good_government_employee_percentage],
+        "Employees": [public_safety_employee_count, public_works_employee_count, stronger_neighborhoods_employee_count, good_government_employee_count]
+    })
+
+    counts_df = df.groupby('Division Category').size().reset_index(name='Total Employees').sort_values(by='Total Employees', ascending=False)
+    # # Display the bar chart with specified axes
+    # st.bar_chart(counts_df, x='Division Category', y='Total Employees')
+
+    chart = alt.Chart(counts_df).mark_bar(color=TEAL).encode(
+        x=alt.X(
+            'Division Category',
+            axis=alt.Axis(labelAngle=0),  # Rotate labels
+            sort='-y',  # Sort in descending order
+            title=None,
+        ),
+        y=alt.Y(
+            'Total Employees',
+            axis=alt.Axis(format=',d'),  # Format numbers with comma 
+        )
+    )
+    st.altair_chart(chart)
+
 st.space()
+
+st.markdown('### Employment Type by Division Category')
+
+# REUSABLE SNIPPET - utils.py
+division_category = 'Public Safety'  # Adjust based on page
+public_safety_employees = df.groupby('Division Category').size()[division_category]
+
+# Get division category employee percentage of total city employees
+public_safety_employee_percentage = (public_safety_employees / total_city_employees) * 100
+
+# Get count of full-time employees for Public Safety
+public_safety_full_time_employee_count = len(df.loc[
+        (df['Division Category'] == 'Public Safety') & (df['Employment Type'] == 'Full-time')
+])
+
+# Get Public Safety full-time employee percentage of total full-time employees 
+public_safety_full_time_employee_percentage = (
+    public_safety_full_time_employee_count / total_salaried_employees
+) * 100
+
+# Get count of full-time employees for Stronger Neighborhoods
+stronger_neighborhoods_part_time_employee_count = len(df.loc[
+        (df['Division Category'] == 'Stronger Neighborhoods') & (df['Employment Type'] == 'Part-time')
+])
+
+# Get Stronger Neighborhoods pull-time employee percentage of total full-time employees 
+stronger_neighborhoods_part_time_employee_percentage = (
+    stronger_neighborhoods_part_time_employee_count / total_part_time_employees
+) * 100
+
+division_category_metric_cols = st.columns(3)
+
+with division_category_metric_cols[0]:
+    st.metric(
+        label=division_category,
+        value=f"{public_safety_employee_percentage:.1f}%",
+        delta="Largest Division Category"
+    )
+
+with division_category_metric_cols[1]:
+    st.metric(
+        label=division_category,
+        value=f"{public_safety_full_time_employee_percentage:.1f}%",
+        delta="Largest Full-time Division Category"
+    )
+
+with division_category_metric_cols[2]:
+    st.metric(
+        label='Stronger Neighborhoods',
+        value=f"{stronger_neighborhoods_part_time_employee_percentage:.1f}%",
+        delta="Largest Part-time Division Category"
+    )
+
+st.space()
+
+employment_type_by_division_category = (
+    df['Employment Type']
+    .groupby(df['Division Category'])
+    .value_counts()
+    .reset_index(name='Count')
+)
+
+employment_type_by_division_category_chart = alt.Chart(employment_type_by_division_category).mark_bar().encode(
+    x=alt.X(
+        'Division Category:N',
+        axis=alt.Axis(labelAngle=0),  # Rotate labels
+        sort=alt.EncodingSortField(
+            field='Count',
+            op='sum',
+            order='descending'
+        ),
+        title=None,
+    ),
+    y=alt.Y(
+        'sum(Count):Q',
+        axis=alt.Axis(
+            format=',d',
+            title='Number of Employees',
+        ),
+        
+    ),
+    # x=alt.X('sum(Count):Q',
+    #     axis=alt.Axis(format=',d', title='Number of Employees')
+    # ),
+    # y=alt.Y('Division Category:N',
+    #     sort=alt.EncodingSortField(
+    #         field='Count',
+    #         op='sum',
+    #         order='descending'
+    #     ),
+    #     axis=alt.Axis(title=None, labelLimit=300)
+    # ),
+    # Sort the segments within each bar by the 'Employment Type' field in descending order
+    order=alt.Order('Employment Type', sort='ascending'),
+    color=alt.Color('Employment Type:N',
+        title='Employment Type',
+        scale=alt.Scale(
+            domain=['Full-time', 'Part-time'],
+            range=[TEAL, LIGHT_TEAL]
+            
+        ),
+    ),
+    tooltip=[
+        alt.Tooltip('Division Category:N', title='Category'),
+        alt.Tooltip('Employment Type:N', title='Employment Type'),
+        alt.Tooltip('sum(Count):Q', title='Count', format=',d')
+    ]
+).properties(
+    title=alt.TitleParams(
+        text='Employee Count by Division Category: Full-time vs Part-time',
+        subtitle=['Fiscal Year 2025 | Source: City of Memphis'],
+        anchor='start'
+    )
+)
+
+st.altair_chart(employment_type_by_division_category_chart, width="stretch")
+
+st.space()
+
+st.markdown('### Employment Type by Division')
+
+# RESUSABLE SNIPPET - utils.py
+division = 'Police Services'  # Adjust based on page
+police_services_employees = df.groupby('Division Name').size()[division]
+
+# Get division employee percentage of total city employees
+divison_employee_percentage = (police_services_employees / total_city_employees) * 100
+
+# Get count of full-time employees for Police Services
+police_services_full_time_employee_count = len(df.loc[
+        (df['Division Name'] == 'Police Services') & (df['Employment Type'] == 'Full-time')
+])
+
+# Get Police Services Full-time employee percentage of total full-time employees 
+police_services_full_time_employee_percentage = (
+    police_services_full_time_employee_count / total_salaried_employees
+) * 100
+
+employement_division_cols = st.columns(3)
+
+with employement_division_cols[0]:
+    st.metric(
+        label=division,
+        value=f"{divison_employee_percentage:.1f}%",
+        delta="Largest Employment Division"
+    )
+
+with employement_division_cols[1]:
+    st.metric(
+        label=division,
+        value=f"{police_services_full_time_employee_percentage:.1f}%",
+        delta="Largest Full-time Division"
+    )
+
+with employement_division_cols[2]:
+    st.metric(
+        label="Memphis Parks",
+        value=f"{divison_employee_percentage:.1f}%",
+        delta="Largest Part-time Division"
+    )
+
+
+st.space()
+# st.space()
 
 result = (
     df['Employment Type']
