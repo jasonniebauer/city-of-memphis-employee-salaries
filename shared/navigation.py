@@ -61,8 +61,8 @@ def render_navigation():
         #     size="large"
         # )
         st.image(LOGO_URL, width=50)
-        st.markdown('<h1 style="padding-top:0;">Memphis Data</h1>', unsafe_allow_html=True)
-        st.subheader("City Insights")
+        st.markdown('<h1 style="padding-top:0;">City of Memphis</h1>', unsafe_allow_html=True)
+        st.subheader("Employee Insights")
         # Navigation links
         st.page_link("streamlit_app.py", label="Overview", icon=":material/tour:")
         st.page_link("pages/public-safety.py", label="Public Safety", icon=":material/local_police:")
