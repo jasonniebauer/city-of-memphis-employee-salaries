@@ -351,7 +351,34 @@ st.markdown('### Employees by Division Category')
 employment_type_division_category_cols = st.columns(2, gap="xlarge")
 
 with employment_type_division_category_cols[0]:
-    st.markdown("""Placeholder""")
+    st.markdown(
+        """
+        Public Safety accounts for more than 54% of all employees for the city.
+        """
+    )
+
+    st.space()
+
+    # REUSABLE SNIPPET - utils.py
+    division_category = 'Public Safety'  # Adjust based on page
+    public_safety_employees = df.groupby('Division Category').size()[division_category]
+
+    # Get division category employee percentage of total city employees
+    public_safety_employee_percentage = (public_safety_employees / total_city_employees) * 100
+
+    st.metric(
+        label="Public Safety Employees",
+        # value=f"{public_safety_employee_percentage:.1f}%",
+        value="4,466",
+        # delta="Largest Division Category",
+        delta=None,
+    )
+
+    st.metric(
+        label="Public Safety Percent of City Employees",
+        value="54.5%",
+        delta=None,
+    )
 
 with employment_type_division_category_cols[1]:
     public_safety_employee_count = len(df.loc[
@@ -414,16 +441,9 @@ st.space()
 
 st.markdown('### Employment Type by Division Category')
 
-# REUSABLE SNIPPET - utils.py
-division_category = 'Public Safety'  # Adjust based on page
-public_safety_employees = df.groupby('Division Category').size()[division_category]
-
-# Get division category employee percentage of total city employees
-public_safety_employee_percentage = (public_safety_employees / total_city_employees) * 100
-
 # Get count of full-time employees for Public Safety
 public_safety_full_time_employee_count = len(df.loc[
-        (df['Division Category'] == 'Public Safety') & (df['Employment Type'] == 'Full-time')
+    (df['Division Category'] == 'Public Safety') & (df['Employment Type'] == 'Full-time')
 ])
 
 # Get Public Safety full-time employee percentage of total full-time employees 
@@ -433,7 +453,7 @@ public_safety_full_time_employee_percentage = (
 
 # Get count of full-time employees for Stronger Neighborhoods
 stronger_neighborhoods_part_time_employee_count = len(df.loc[
-        (df['Division Category'] == 'Stronger Neighborhoods') & (df['Employment Type'] == 'Part-time')
+    (df['Division Category'] == 'Stronger Neighborhoods') & (df['Employment Type'] == 'Part-time')
 ])
 
 # Get Stronger Neighborhoods pull-time employee percentage of total full-time employees 
@@ -441,23 +461,16 @@ stronger_neighborhoods_part_time_employee_percentage = (
     stronger_neighborhoods_part_time_employee_count / total_part_time_employees
 ) * 100
 
-division_category_metric_cols = st.columns(3)
+division_category_metric_cols = st.columns(2)
 
 with division_category_metric_cols[0]:
     st.metric(
-        label=division_category,
-        value=f"{public_safety_employee_percentage:.1f}%",
-        delta="Largest Division Category"
-    )
-
-with division_category_metric_cols[1]:
-    st.metric(
-        label=division_category,
+        label="Public Safety",
         value=f"{public_safety_full_time_employee_percentage:.1f}%",
         delta="Largest Full-time Division Category"
     )
 
-with division_category_metric_cols[2]:
+with division_category_metric_cols[1]:
     st.metric(
         label='Stronger Neighborhoods',
         value=f"{stronger_neighborhoods_part_time_employee_percentage:.1f}%",
