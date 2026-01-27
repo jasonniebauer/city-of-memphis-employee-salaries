@@ -1,5 +1,5 @@
 # City of Memphis Employee Salaries
-Payroll snapshot dashboard exploring the City of Memphis employee salaries dataset.
+Payroll snapshot dashboard exploring the City of Memphis employee salaries.
 
 ## View it in one click
 

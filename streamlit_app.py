@@ -84,6 +84,10 @@ division_salary_totals = pd.DataFrame(df.groupby('Division Category')['Annual Sa
 
 # Main content
 st.space()
+st.info(
+    'This site is currently under construction. Stay tuned!',
+    icon=":material/build:"
+)
 st.title("City of Memphis Employee Salaries")
 st.caption("Payroll Snapshot - January 28, 2025")
 
