@@ -56,7 +56,7 @@ st.markdown(
     """, unsafe_allow_html=True)
 
 ##################################################
-# Data Preparation and Processing
+# Data Preparation
 ##################################################
 
 #
@@ -89,8 +89,149 @@ total_hourly_job_titles = df[df['Employment Type'] == 'Part-time']['Job Title'].
 percent_salaried_employees = total_salaried_employees / total_city_employees
 percent_part_time_employees = total_part_time_employees / total_city_employees
 
+# Calculating the sum of all Salaries in each Division Category
+division_category_salary_totals = pd.DataFrame(df.groupby('Division Category')['Annual Salary'].sum()).reset_index()
+
+# Sort Division Categories by the sum of all Salaries in descending order
+division_category_salary_totals.sort_values(by='Annual Salary', ascending=False, inplace=True)
+
+def custom_logic(row):
+    return (row['Annual Salary'] / total_city_salaries) 
+
+# Apply the function to each row (axis=1)
+division_category_salary_totals['Percentage'] = division_category_salary_totals.apply(custom_logic, axis=1)
+
+#
+public_safety_salary = division_category_salary_totals.loc[
+    division_category_salary_totals['Division Category'] == 'Public Safety', 'Annual Salary'
+].values[0] / 1e6
+
+#
+public_works_salary = division_category_salary_totals.loc[
+    division_category_salary_totals['Division Category'] == 'Public Works', 'Annual Salary'
+].values[0] / 1e6
+
+#
+stronger_neighborhoods_salary = division_category_salary_totals.loc[
+    division_category_salary_totals['Division Category'] == 'Stronger Neighborhoods', 'Annual Salary'
+].values[0] / 1e6
+
+#
+good_government_salary = division_category_salary_totals.loc[
+    division_category_salary_totals['Division Category'] == 'Good Government', 'Annual Salary'
+].values[0] / 1e6
+
 # Calculating the sum of all Salaries in each Division
-division_salary_totals = pd.DataFrame(df.groupby('Division Category')['Annual Salary'].sum()).reset_index()
+division_salary_totals = pd.DataFrame(df.groupby('Division Name')['Annual Salary'].sum()).reset_index()
+
+# Sort Divisions by the sum of all Salaries in descending order
+division_salary_totals.sort_values(by='Annual Salary', ascending=False, inplace=True)
+
+#
+source = pd.DataFrame({
+    "Employment Type": ["Full-time", "Part-time"],
+    "Value": [percent_salaried_employees, percent_part_time_employees],
+    "Count": [total_salaried_employees, total_part_time_employees]
+})
+
+# REUSABLE SNIPPET - utils.py
+division_category = 'Public Safety'  # Adjust based on page
+public_safety_employees = df.groupby('Division Category').size()[division_category]
+
+# Get division category employee percentage of total city employees
+public_safety_employee_percentage = (public_safety_employees / total_city_employees) * 100
+
+public_safety_employee_count = len(df.loc[
+    df['Division Category'] == 'Public Safety'
+])
+
+public_safety_employee_percentage = (
+    public_safety_employee_count / total_city_employees
+)
+
+public_works_employee_count = len(df.loc[
+    df['Division Category'] == 'Public Works'
+])
+
+public_works_employee_percentage = (
+    public_works_employee_count / total_city_employees
+)
+
+stronger_neighborhoods_employee_count = len(df.loc[
+    df['Division Category'] == 'Stronger Neighborhoods'
+])
+
+stronger_neighborhoods_employee_percentage = (
+    stronger_neighborhoods_employee_count / total_city_employees
+)
+
+good_government_employee_count = len(df.loc[
+    df['Division Category'] == 'Good Government'
+])
+
+good_government_employee_percentage = (
+    good_government_employee_count / total_city_employees
+)
+
+df_division_category_employee = pd.DataFrame({
+    "Division Category": ["Public Safety", "Public Works", "Stronger Neighborhoods", "Good Government"],
+    "Value": [public_safety_employee_percentage, public_works_employee_percentage, stronger_neighborhoods_employee_percentage, good_government_employee_percentage],
+    "Employees": [public_safety_employee_count, public_works_employee_count, stronger_neighborhoods_employee_count, good_government_employee_count]
+})
+
+counts_df = df.groupby('Division Category').size().reset_index(name='Total Employees').sort_values(by='Total Employees', ascending=False)
+
+# Get count of full-time employees for Public Safety
+public_safety_full_time_employee_count = len(df.loc[
+    (df['Division Category'] == 'Public Safety') & (df['Employment Type'] == 'Full-time')
+])
+
+# Get Public Safety full-time employee percentage of total full-time employees 
+public_safety_full_time_employee_percentage = (
+    public_safety_full_time_employee_count / total_salaried_employees
+) * 100
+
+# Get count of full-time employees for Stronger Neighborhoods
+stronger_neighborhoods_part_time_employee_count = len(df.loc[
+    (df['Division Category'] == 'Stronger Neighborhoods') & (df['Employment Type'] == 'Part-time')
+])
+
+# Get Stronger Neighborhoods pull-time employee percentage of total full-time employees 
+stronger_neighborhoods_part_time_employee_percentage = (
+    stronger_neighborhoods_part_time_employee_count / total_part_time_employees
+) * 100
+
+#
+employment_type_by_division_category = (
+    df['Employment Type']
+    .groupby(df['Division Category'])
+    .value_counts()
+    .reset_index(name='Count')
+)
+
+# RESUSABLE SNIPPET - utils.py
+division = 'Police Services'  # Adjust based on page
+police_services_employees = df.groupby('Division Name').size()[division]
+
+# Get division employee percentage of total city employees
+divison_employee_percentage = (police_services_employees / total_city_employees) * 100
+
+# Get count of full-time employees for Police Services
+police_services_full_time_employee_count = len(df.loc[
+        (df['Division Name'] == 'Police Services') & (df['Employment Type'] == 'Full-time')
+])
+
+# Get Police Services Full-time employee percentage of total full-time employees 
+police_services_full_time_employee_percentage = (
+    police_services_full_time_employee_count / total_salaried_employees
+) * 100
+
+result = (
+    df['Employment Type']
+    .groupby(df['Division Name'])
+    .value_counts()
+    .reset_index(name='Count')
+)
 
 ##################################################
 # UI Content
@@ -138,15 +279,6 @@ with salary_cols[0]:
     st.caption("<small class='center' style='margin-top:0;line-height:1.0;'>* Does not include part-time, hourly payroll</small>", unsafe_allow_html=True)
 
 with salary_cols[1]:
-    # Sort Divisions by the sum of all Salaries in descending order
-    division_salary_totals.sort_values(by='Annual Salary', ascending=False, inplace=True)
-
-    def custom_logic(row):
-        return (row['Annual Salary'] / total_city_salaries) 
-
-    # Apply the function to each row (axis=1)
-    division_salary_totals['Percentage'] = division_salary_totals.apply(custom_logic, axis=1)
-
     # Define colors
     color_map = {
         "Public Safety": MEDIUM_RED,
@@ -155,7 +287,7 @@ with salary_cols[1]:
         "Good Government": YELLOW,
     }
     
-    salary_distribution_by_division_category = alt.Chart(division_salary_totals).mark_arc().encode(
+    salary_distribution_by_division_category = alt.Chart(division_category_salary_totals).mark_arc().encode(
         theta=alt.Theta("Percentage:Q", stack=True),
         color=alt.Color("Division Category:N", scale=alt.Scale(
             domain=list(color_map.keys()),
@@ -178,22 +310,6 @@ st.space()
 with st.container():
     division_category_cols = st.columns(4)
 
-    public_safety_salary = division_salary_totals.loc[
-        division_salary_totals['Division Category'] == 'Public Safety', 'Annual Salary'
-    ].values[0] / 1e6
-
-    public_works_salary = division_salary_totals.loc[
-        division_salary_totals['Division Category'] == 'Public Works', 'Annual Salary'
-    ].values[0] / 1e6
-
-    stronger_neighborhoods_salary = division_salary_totals.loc[
-        division_salary_totals['Division Category'] == 'Stronger Neighborhoods', 'Annual Salary'
-    ].values[0] / 1e6
-
-    good_government_salary = division_salary_totals.loc[
-        division_salary_totals['Division Category'] == 'Good Government', 'Annual Salary'
-    ].values[0] / 1e6
-
     with division_category_cols[0]:
         st.markdown(f'<p class="xl-metric red">${public_safety_salary:,.1f}M</p>', unsafe_allow_html=True)
         st.markdown('<p class="center bold">Public Safety</p>', unsafe_allow_html=True)
@@ -214,12 +330,6 @@ st.space()
 st.space()
 
 with st.container():
-    # Calculating the sum of all Salaries in each Division
-    division_salary_totals = pd.DataFrame(df.groupby('Division Name')['Annual Salary'].sum()).reset_index()
-
-    # Sort Divisions by the sum of all Salaries in descending order
-    division_salary_totals.sort_values(by='Annual Salary', ascending=False, inplace=True)
-
     # Define colors
     division_color_scale = alt.Scale(
         domain=[
@@ -262,7 +372,6 @@ with st.container():
         ]
     )
 
-    # color="#202124"
     chart = alt.Chart(division_salary_totals).mark_bar().encode(
         x=alt.X('Annual Salary', axis=alt.Axis(title='Annual Salary Total', format='$,s')),
         y=alt.Y(
@@ -331,12 +440,6 @@ with overview_col_1:
     # )
 
 with overview_col_2:
-    source = pd.DataFrame({
-        "Employment Type": ["Full-time", "Part-time"],
-        "Value": [percent_salaried_employees, percent_part_time_employees],
-        "Count": [total_salaried_employees, total_part_time_employees]
-    })
-
     # Define colors
     employee_classification_color_map = {
         "Full-time": TEAL,
@@ -376,13 +479,6 @@ with employment_type_division_category_cols[0]:
 
     st.space()
 
-    # REUSABLE SNIPPET - utils.py
-    division_category = 'Public Safety'  # Adjust based on page
-    public_safety_employees = df.groupby('Division Category').size()[division_category]
-
-    # Get division category employee percentage of total city employees
-    public_safety_employee_percentage = (public_safety_employees / total_city_employees) * 100
-
     st.metric(
         label="Public Safety Employees",
         # value=f"{public_safety_employee_percentage:.1f}%",
@@ -398,48 +494,6 @@ with employment_type_division_category_cols[0]:
     )
 
 with employment_type_division_category_cols[1]:
-    public_safety_employee_count = len(df.loc[
-        df['Division Category'] == 'Public Safety'
-    ])
-
-    public_safety_employee_percentage = (
-        public_safety_employee_count / total_city_employees
-    )
-
-    public_works_employee_count = len(df.loc[
-        df['Division Category'] == 'Public Works'
-    ])
-
-    public_works_employee_percentage = (
-        public_works_employee_count / total_city_employees
-    )
-
-    stronger_neighborhoods_employee_count = len(df.loc[
-        df['Division Category'] == 'Stronger Neighborhoods'
-    ])
-
-    stronger_neighborhoods_employee_percentage = (
-        stronger_neighborhoods_employee_count / total_city_employees
-    )
-
-    good_government_employee_count = len(df.loc[
-        df['Division Category'] == 'Good Government'
-    ])
-
-    good_government_employee_percentage = (
-        good_government_employee_count / total_city_employees
-    )
-
-    df_division_category_employee = pd.DataFrame({
-        "Division Category": ["Public Safety", "Public Works", "Stronger Neighborhoods", "Good Government"],
-        "Value": [public_safety_employee_percentage, public_works_employee_percentage, stronger_neighborhoods_employee_percentage, good_government_employee_percentage],
-        "Employees": [public_safety_employee_count, public_works_employee_count, stronger_neighborhoods_employee_count, good_government_employee_count]
-    })
-
-    counts_df = df.groupby('Division Category').size().reset_index(name='Total Employees').sort_values(by='Total Employees', ascending=False)
-    # # Display the bar chart with specified axes
-    # st.bar_chart(counts_df, x='Division Category', y='Total Employees')
-
     chart = alt.Chart(counts_df).mark_bar(color=TEAL).encode(
         x=alt.X(
             'Division Category',
@@ -458,26 +512,6 @@ st.space()
 
 st.markdown('### Employment Type by Division Category')
 
-# Get count of full-time employees for Public Safety
-public_safety_full_time_employee_count = len(df.loc[
-    (df['Division Category'] == 'Public Safety') & (df['Employment Type'] == 'Full-time')
-])
-
-# Get Public Safety full-time employee percentage of total full-time employees 
-public_safety_full_time_employee_percentage = (
-    public_safety_full_time_employee_count / total_salaried_employees
-) * 100
-
-# Get count of full-time employees for Stronger Neighborhoods
-stronger_neighborhoods_part_time_employee_count = len(df.loc[
-    (df['Division Category'] == 'Stronger Neighborhoods') & (df['Employment Type'] == 'Part-time')
-])
-
-# Get Stronger Neighborhoods pull-time employee percentage of total full-time employees 
-stronger_neighborhoods_part_time_employee_percentage = (
-    stronger_neighborhoods_part_time_employee_count / total_part_time_employees
-) * 100
-
 division_category_metric_cols = st.columns(2)
 
 with division_category_metric_cols[0]:
@@ -495,13 +529,6 @@ with division_category_metric_cols[1]:
     )
 
 st.space()
-
-employment_type_by_division_category = (
-    df['Employment Type']
-    .groupby(df['Division Category'])
-    .value_counts()
-    .reset_index(name='Count')
-)
 
 employment_type_by_division_category_chart = alt.Chart(employment_type_by_division_category).mark_bar().encode(
     x=alt.X(
@@ -562,23 +589,6 @@ st.space()
 
 st.markdown('### Employment Type by Division')
 
-# RESUSABLE SNIPPET - utils.py
-division = 'Police Services'  # Adjust based on page
-police_services_employees = df.groupby('Division Name').size()[division]
-
-# Get division employee percentage of total city employees
-divison_employee_percentage = (police_services_employees / total_city_employees) * 100
-
-# Get count of full-time employees for Police Services
-police_services_full_time_employee_count = len(df.loc[
-        (df['Division Name'] == 'Police Services') & (df['Employment Type'] == 'Full-time')
-])
-
-# Get Police Services Full-time employee percentage of total full-time employees 
-police_services_full_time_employee_percentage = (
-    police_services_full_time_employee_count / total_salaried_employees
-) * 100
-
 employement_division_cols = st.columns(3)
 
 with employement_division_cols[0]:
@@ -605,13 +615,6 @@ with employement_division_cols[2]:
 
 st.space()
 # st.space()
-
-result = (
-    df['Employment Type']
-    .groupby(df['Division Name'])
-    .value_counts()
-    .reset_index(name='Count')
-)
 
 chart = alt.Chart(result).mark_bar().encode(
     x=alt.X('sum(Count):Q',
