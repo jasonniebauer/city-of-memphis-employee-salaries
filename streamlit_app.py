@@ -413,11 +413,8 @@ overview_col_1, overview_col_2 = st.columns(2, gap="xlarge")
 with overview_col_1:
     st.markdown(
         f"""
-        The City of Memphis employs 8,202 individuals across {total_divisions} divisions supporting essential public services throughout the city.
-        
-        Salaried employees account for over 83% of the City's core full-time workforce, while part-time, hourly employees (typically in seasonal, support, or entry-level roles) make up nearly 17%.
+        The City of Memphis employs 8,202 individuals across {total_divisions} divisions supporting essential public services throughout the city. Salaried employees account for over 83% of the City's core full-time workforce, while part-time, hourly employees (typically in seasonal, support, or entry-level roles) make up nearly 17%.
 
-        
         <div class="table-row">
             <span class="bold">Full-time (salaried) employees</span>
             <span>{total_salaried_employees:,}</span>
@@ -494,13 +491,13 @@ with employees_by_division_category_cols[0]:
 
     with employees_by_division_category_summary_cols[0]:
         st.metric(
-            label="Public Safety Employees",
+            label=":material/local_police: Public Safety Employees",
             value="4,466",  
             delta=None,
         )
     with employees_by_division_category_summary_cols[1]:
         st.metric(
-            label="Percent of City Employees",
+            label="Public Safety :material/percent: of City Employees",
             value=f"{public_safety_employee_percentage*100:.1f}%",
             delta=None,
         )
@@ -524,20 +521,29 @@ st.space()
 
 st.markdown('### Employment Type by Division Category')
 
-division_category_metric_cols = st.columns(2)
+employment_type_by_division_category_cols = st.columns(2, gap="xlarge")
 
-with division_category_metric_cols[0]:
+with employment_type_by_division_category_cols[0]:
+    st.markdown(
+        """
+        Public Safety leads full-time (salaried) roles, accounting for more than 61% of all salaried City of Memphis employees. In contrast, Stronger Neighborhoods represents nearly 50% of part-time positions, likely due to seasonal, event-based, or community-focused roles (e.g. lifeguards, park staff, or temporary neighborhood services).
+
+        This split underscores different staffing needs: Public Safety relies heavily on stable, round-the-clock full-time positions (e.g. officers and firefighters), while other divisions like Stronger Neighborhoods lean on flexible part-time labor.
+        """
+    )
+with employment_type_by_division_category_cols[1]:
     st.metric(
-        label="Public Safety",
+        label=":material/local_police: Public Safety",
         value=f"{public_safety_full_time_employee_percentage:.1f}%",
-        delta="Largest Full-time Division Category"
+        delta="Largest Full-time Category"
     )
 
-with division_category_metric_cols[1]:
+    st.space()
+
     st.metric(
-        label='Stronger Neighborhoods',
+        label=':material/psychiatry: Stronger Neighborhoods',
         value=f"{stronger_neighborhoods_part_time_employee_percentage:.1f}%",
-        delta="Largest Part-time Division Category"
+        delta="Largest Part-time Category"
     )
 
 st.space()
@@ -589,7 +595,7 @@ employment_type_by_division_category_chart = alt.Chart(employment_type_by_divisi
     ]
 ).properties(
     title=alt.TitleParams(
-        text='Employee Count by Division Category: Full-time vs Part-time',
+        text='Employment Type Breakdown: Full-Time vs. Part-Time by Division Category',
         subtitle=['Fiscal Year 2025 | Source: City of Memphis'],
         anchor='start'
     )
@@ -653,7 +659,7 @@ chart = alt.Chart(result).mark_bar().encode(
     ]
 ).properties(
     title=alt.TitleParams(
-        text='Employee Count by Division: Full-time vs Part-time',
+        text='Employment Type Breakdown: Full-Time vs. Part-Time by Division',
         subtitle=['Fiscal Year 2025 | Source: City of Memphis'],
         anchor='start'
     )
