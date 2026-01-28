@@ -5,13 +5,18 @@ from shared.navigation import render_navigation
 from shared.styles import render_reusable_styles
 from shared.data_loader import initialize_data, get_department_summary
 from shared.colors import TEAL, LIGHT_TEAL, MEDIUM_RED, MEDIUM_BLUE, MEDIUM_GREEN, YELLOW, LIGHT_GREY, GREY, BLACK
-from config import PAGE_CONFIG
 
 
 ##################################################
 # Page initialization and setup
 ##################################################
-st.set_page_config(**PAGE_CONFIG)
+# st.set_page_config(**PAGE_CONFIG)
+st.set_page_config(
+    page_title="Memphis Employee Insights",
+    page_icon=":chart_with_upwards_trend:",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Render navigation sidebar
 render_navigation()

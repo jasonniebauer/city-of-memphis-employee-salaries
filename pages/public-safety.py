@@ -2,13 +2,17 @@ import streamlit as st
 from shared.navigation import render_navigation
 from shared.styles import render_reusable_styles
 from shared.data_loader import initialize_data
-from config import PAGE_CONFIG
 
 
 ##################################################
 # Page initialization and setup
 ##################################################
-st.set_page_config(**PAGE_CONFIG)
+st.set_page_config(
+    page_title="Memphis Employee Insights – Public Safety",
+    page_icon=":chart_with_upwards_trend:",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Render navigation
 render_navigation()
