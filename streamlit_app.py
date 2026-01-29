@@ -280,7 +280,7 @@ with salary_cols[0]:
         """
         City of Memphis employees are organized into four primary categories: Public Safety, Public Works, Stronger Neighborhoods, and Good Government. Each category groups related divisions that deliver similar public services, operations, or administrative functions under shared leadership to support the community efficiently.
         
-        Public Safety accounts for more than 66% of the total salaries across the Memphis workforce. This dominant share reflects the high personnel demands of law enforcement, fire services, and emergency response, including shift-based staffing and overtime.
+        Public Safety accounts for more than 66% of the total salaries across the city's salaried/full-time workforce. This dominant share reflects the high personnel demands of law enforcement, fire services, and emergency response, including shift-based staffing and overtime.
         """
     )
     st.markdown("<p style='font-weight: 600;margin-top:1rem;margin-bottom:0.25rem;line-height:1.0;'>Total Salaries of Memphis Workforce</p>", unsafe_allow_html=True)
