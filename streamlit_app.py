@@ -300,10 +300,14 @@ with salary_cols[1]:
     
     salary_distribution_by_division_category = alt.Chart(division_category_salary_totals).mark_arc().encode(
         theta=alt.Theta("Percentage:Q", stack=True),
-        color=alt.Color("Division Category:N", scale=alt.Scale(
-            domain=list(color_map.keys()),
-            range=list(color_map.values())
-        )),
+        color=alt.Color(
+            "Division Category:N",
+            title="Category",
+            scale=alt.Scale(
+                domain=list(color_map.keys()),
+                range=list(color_map.values())
+            )
+        ),
         tooltip=[
             alt.Tooltip("Division Category:N", title="Category"),
             alt.Tooltip("Annual Salary:Q", format="$,.2f", title="Total Salary"),
