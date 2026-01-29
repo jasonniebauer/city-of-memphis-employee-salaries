@@ -1,0 +1,12 @@
+name: Ping Streamlit App
+
+on:
+  schedule:
+    - cron: '30 */8 * * *'  # Every 8 hours, offset by 30 min to avoid exact hour spikes
+  workflow_dispatch:        # Lets you test manually from Actions tab
+
+jobs:
+  stay-awake:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -s https://memphis-employee-insights.streamlit.app/ > /dev/null
