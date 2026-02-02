@@ -10,7 +10,7 @@ from shared.colors import TEAL, LIGHT_TEAL, MEDIUM_RED, MEDIUM_BLUE, MEDIUM_GREE
 ##################################################
 # Page initialization and setup
 ##################################################
-# st.set_page_config(**PAGE_CONFIG)
+
 st.set_page_config(
     page_title="Memphis Employee Insights",
     page_icon=":chart_with_upwards_trend:",
