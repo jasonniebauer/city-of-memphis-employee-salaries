@@ -642,7 +642,7 @@ with new_cols[0]:
 
     st.altair_chart(
         employees_by_division_chart,
-        use_container_width=True
+        width='stretch'
     )
 
 with new_cols[1]:
