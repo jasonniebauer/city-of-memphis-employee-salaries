@@ -2,7 +2,7 @@ name: Ping Streamlit App
 
 on:
   schedule:
-    - cron: '30 */8 * * *'  # Every 8 hours, offset by 30 min to avoid exact hour spikes
+    - cron: '30 */4 * * *'  # Every 4 hours, offset by 30 min to avoid exact hour spikes
   workflow_dispatch:        # Lets you test manually from Actions tab
 
 jobs:
