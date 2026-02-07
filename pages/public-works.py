@@ -52,3 +52,44 @@ with st.spinner('Loading data and calculations...'):
     )
     st.title("Public Works")
     st.markdown("### Public Works, Solid Waste Management, City Engineering, and General Services")
+
+    st.markdown(
+        """
+        **To do:**
+        - SECTION: Salaries by Division Category / Divisions
+            - Total Salary of Public Works Workforce
+            - Total Salaries by Division
+            - Employee Workforce
+                - Total full-time vs part-time employees across division category
+                - Total employee breakdown by division
+                - Percent of workforce by division
+        - SECTION: Public Works
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: Solid Waste Management
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: City Engineering
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: General Services
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        """
+    )
