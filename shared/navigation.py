@@ -71,7 +71,7 @@ def render_navigation():
         st.page_link("pages/good-government.py", label="Good Government", icon=":material/account_balance:")
         
         st.markdown("---")
-        st.caption("Last updated: January 2026")
+        st.caption("Last updated: February 2026")
         # st.caption("<small>Data as of January 28, 2025</small>", unsafe_allow_html=True)
         st.markdown(
             '<h6>Made by <a href="https://jasonniebauer.com" style="text-decoration:underline;">Jason Niebauer</a></h6>',
