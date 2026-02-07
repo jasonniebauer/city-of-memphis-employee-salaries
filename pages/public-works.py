@@ -44,9 +44,11 @@ st.markdown("""
 # UI Content
 ##################################################
 st.space()
-st.info(
-    'Building Better Transparency: Under Active Development – Check Back for More Soon!',
-    icon=":material/build:"
-)
-st.title("Public Works")
-st.markdown("### Public Works, Solid Waste Management, City Engineering, and General Services")
+
+with st.spinner('Loading data and calculations...'):
+    st.info(
+        'Building Better Transparency: Under Active Development – Check Back for More Soon!',
+        icon=":material/build:"
+    )
+    st.title("Public Works")
+    st.markdown("### Public Works, Solid Waste Management, City Engineering, and General Services")
