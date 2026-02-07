@@ -52,10 +52,22 @@ with st.spinner('Loading data and calculations...'):
     st.title("Public Safety")
     st.markdown("### Police, Fire, and Emergency Services")
 
+    st.space()
+
+    st.markdown('<h2 class="pt-0">Salaries by Division</h2>', unsafe_allow_html=True)
+
+    salary_cols = st.columns(2, gap="xlarge")
+
+    with salary_cols[0]:
+        st.markdown("[ PLACEHOLDER FOR SUMMARY ]")
+
+    with salary_cols[1]:
+        st.markdown("[ PLACEHOLDER FOR PIE CHART]")
+    
     st.markdown(
         """
         **To do:**
-        - SECTION: Salaries by Division Category / Divisions
+        - ~~SECTION: Salaries by Division Category / Divisions~~
             - Total Salary of Public Safety Workforce
             - Total Salaries by Division
             - Employee Workforce
