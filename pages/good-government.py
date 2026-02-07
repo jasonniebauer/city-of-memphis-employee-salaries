@@ -57,7 +57,7 @@ with st.spinner('Loading data and calculations...'):
         """
         **To do:**
         - SECTION: Salaries by Division Category / Divisions
-            - Total Salary of Public Safety Workforce
+            - Total Salary of Good Government Workforce
             - Total Salaries by Division
             - Employee Workforce
                 - Total full-time vs part-time employees across division category
