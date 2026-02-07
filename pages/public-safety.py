@@ -50,7 +50,7 @@ with st.spinner('Loading data and calculations...'):
         icon=":material/build:"
     )
     st.title("Public Safety")
-    st.markdown("### Police, Fire, and Emergency Services")
+    st.markdown('<h3 class="pt-0">Police, Fire, and Emergency Services</h3>', unsafe_allow_html=True)
 
     st.space()
 
