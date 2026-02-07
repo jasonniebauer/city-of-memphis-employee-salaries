@@ -52,3 +52,51 @@ with st.spinner('Loading data and calculations...'):
     )
     st.title("Good Government")
     st.markdown("### Administration, Finance, HR, IT, Legal, and Governance")
+
+    st.markdown(
+        """
+        **To do:**
+        - SECTION: Salaries by Division Category / Divisions
+            - Total Salary of Public Safety Workforce
+            - Total Salaries by Division
+            - Employee Workforce
+                - Total full-time vs part-time employees across division category
+                - Total employee breakdown by division
+                - Percent of workforce by division
+        - SECTION: Administration
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: Finance
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: HR
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: Legal
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        - SECTION: Governance
+            - Employee Workforce
+                - Total full-time vs part-time employees
+            - Unique roles + average salary for role
+            - Top paying position
+            - Average salary across division
+            - Average hourly rate across division (if applicable)
+        """
+    )
